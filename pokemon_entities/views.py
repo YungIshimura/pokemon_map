@@ -75,6 +75,7 @@ def show_pokemon(request, pokemon_id):
                 {'lat': pokemon_entity.latitude,
                 'lon': pokemon_entity.longitude,
                 }],
+                'description': pokemon_entity.pokemon_location.description
             }
             requested_pokemon.append(pokemon)
 
@@ -85,7 +86,7 @@ def show_pokemon(request, pokemon_id):
             add_pokemon(
                 folium_map, pokemon_entity['lat'],
                 pokemon_entity['lon'],
-                pokemon['img_url']
+                pokemon['img_url'],
             )
 
     return render(request, 'pokemon.html', context={
