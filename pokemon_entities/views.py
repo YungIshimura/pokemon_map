@@ -40,6 +40,9 @@ def show_all_pokemons(request):
                 pokemon_entity.longitude,
                 request.build_absolute_uri(f'media/{pokemon_entity.pokemon_location.image}')
             )
+        
+        if pokemon_entity.disappeared_at < django.utils.timezone.localtime():
+            pokemon_entity.delete()
 
     pokemons_on_page = []
     for pokemon in pokemons:
