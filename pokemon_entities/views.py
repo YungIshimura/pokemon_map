@@ -71,6 +71,8 @@ def show_pokemon(request, pokemon_id):
                 'img_url': request.build_absolute_uri(f'/media/{pokemon_entity.pokemon_location.image}'),
                 "pokemon_id": pokemon_entity.pokemon_location_id,
                 "title_ru": pokemon_entity.pokemon_location.title,
+                "title_jp": pokemon_entity.pokemon_location.title_jp,
+                "title_en": pokemon_entity.pokemon_location.title_en,
                 'entities': [
                 {'lat': pokemon_entity.latitude,
                 'lon': pokemon_entity.longitude,
