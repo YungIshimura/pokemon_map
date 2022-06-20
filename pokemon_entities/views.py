@@ -1,6 +1,5 @@
 import django
 import folium
-import json
 
 
 from django.http import HttpResponseNotFound
@@ -38,9 +37,10 @@ def show_all_pokemons(request):
             add_pokemon(
                 folium_map, pokemon_entity.latitude,
                 pokemon_entity.longitude,
-                request.build_absolute_uri(f'media/{pokemon_entity.pokemon_location.image}')
+                request.build_absolute_uri(
+                    f'media/{pokemon_entity.pokemon_location.image}')
             )
-        
+
         if pokemon_entity.disappeared_at < django.utils.timezone.localtime():
             pokemon_entity.delete()
 
@@ -59,50 +59,49 @@ def show_all_pokemons(request):
 
 
 def show_pokemon(request, pokemon_id):
-    pokemon_entities = PokemonEntity.objects.filter(pokemon_location_id = pokemon_id)
+    pokemon_entities = PokemonEntity.objects.filter(
+        pokemon_location_id=pokemon_id)
     pokemon = Pokemon.objects.filter(id=pokemon_id).first()
     next_pokemon = pokemon.next_evolution.all().first()
-    
+
     if not pokemon_entities:
-         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
-    
+        return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
+
     requested_pokemon = []
 
     for pokemon_entity in pokemon_entities:
-            pokemon_params= {
-                'img_url': request.build_absolute_uri(f'/media/{pokemon_entity.pokemon_location.image}'),
-                "pokemon_id": pokemon_entity.pokemon_location_id,
-                "title_ru": pokemon_entity.pokemon_location.title,
-                "title_jp": pokemon_entity.pokemon_location.title_jp,
-                "title_en": pokemon_entity.pokemon_location.title_en,
-                'entities': 
-                {'lat': pokemon_entity.latitude,
-                'lon': pokemon_entity.longitude,
-                },
-                'description': pokemon_entity.pokemon_location.description,
+        pokemon_params = {
+            'img_url': request.build_absolute_uri(
+                f'/media/{pokemon_entity.pokemon_location.image}'),
+            "pokemon_id": pokemon_entity.pokemon_location_id,
+            "title_ru": pokemon_entity.pokemon_location.title,
+            "title_jp": pokemon_entity.pokemon_location.title_jp,
+            "title_en": pokemon_entity.pokemon_location.title_en,
+            'entities': {'lat': pokemon_entity.latitude,
+                         'lon': pokemon_entity.longitude},
+            'description': pokemon_entity.pokemon_location.description,
+        }
+
+        if next_pokemon:
+            pokemon_params['next_evolution'] = {
+                "title_ru": next_pokemon.title,
+                "pokemon_id": next_pokemon.id,
+                "img_url": request.build_absolute_uri(
+                    f'/media/{next_pokemon.image}')
             }
-            
-           
-            if next_pokemon: 
-                pokemon_params['next_evolution'] = {
-                    "title_ru": next_pokemon.title,
-                    "pokemon_id": next_pokemon.id,
-                    "img_url": request.build_absolute_uri(f'/media/{next_pokemon.image}')
-                }
-            
-            if pokemon.previous_evolution:
-                pokemon_params['previous_evolution'] = {
+
+        if pokemon.previous_evolution:
+            pokemon_params['previous_evolution'] = {
                 "title_ru": pokemon.previous_evolution.title,
                 "pokemon_id": pokemon.previous_evolution.id,
-                "img_url":  request.build_absolute_uri(f'/media/{pokemon.previous_evolution.image}')
-                }
+                "img_url":  request.build_absolute_uri(
+                    f'/media/{pokemon.previous_evolution.image}')
+            }
 
-            
-            
-            requested_pokemon.append(pokemon_params)
+        requested_pokemon.append(pokemon_params)
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
-    
+
     for pokemon_entity in requested_pokemon:
         add_pokemon(
             folium_map, pokemon_entity['entities']['lat'],
