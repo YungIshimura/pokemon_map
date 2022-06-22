@@ -62,7 +62,7 @@ def show_pokemon(request, pokemon_id):
     pokemon_entities = PokemonEntity.objects.filter(
         pokemon_location_id=pokemon_id)
     pokemon = Pokemon.objects.filter(id=pokemon_id).first()
-    next_pokemon = pokemon.next_evolution.all().first()
+    next_pokemon = pokemon.next_evolutions.all().first()
 
     if not pokemon_entities:
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
@@ -83,7 +83,7 @@ def show_pokemon(request, pokemon_id):
         }
 
         if next_pokemon:
-            pokemon_params['next_evolution'] = {
+            pokemon_params['next_evolutions'] = {
                 "title_ru": next_pokemon.title,
                 "pokemon_id": next_pokemon.id,
                 "img_url": request.build_absolute_uri(
