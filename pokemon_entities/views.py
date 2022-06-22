@@ -1,6 +1,5 @@
 import folium
 
-from pogomap.settings import MEDIA_URL
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from .models import Pokemon, PokemonEntity
@@ -36,15 +35,14 @@ def show_all_pokemons(request):
             add_pokemon(
                 folium_map, pokemon_entity.latitude,
                 pokemon_entity.longitude,
-                request.build_absolute_uri(
-                    f'media/{pokemon_entity.pokemon.image}')
+                request.build_absolute_uri(pokemon_entity.pokemon.image.url)
             )
 
     pokemons_on_page = []
     for pokemon in pokemons:
         pokemons_on_page.append({
             'pokemon_id': pokemon.id,
-            'img_url': request.build_absolute_uri(f'{MEDIA_URL}{pokemon.image}'),
+            'img_url': pokemon.image.url,
             'title_ru': pokemon.title,
         })
 
@@ -67,7 +65,7 @@ def show_pokemon(request, pokemon_id):
 
     for pokemon_entity in pokemon_entities:
         pokemon_params = {
-            'img_url': request.build_absolute_uri(f'{MEDIA_URL}{pokemon.image}'),
+            'img_url': request.build_absolute_uri(pokemon_entity.pokemon.image.url),
             "pokemon_id": pokemon_entity.pokemon_id,
             "title_ru": pokemon_entity.pokemon.title,
             "title_jp": pokemon_entity.pokemon.title_jp,
@@ -81,14 +79,14 @@ def show_pokemon(request, pokemon_id):
             pokemon_params['next_evolution'] = {
                 "title_ru": next_pokemon.title,
                 "pokemon_id": next_pokemon.id,
-                "img_url": request.build_absolute_uri(f'{MEDIA_URL}{pokemon.image}')
+                "img_url": next_pokemon.image.url
             }
 
         if pokemon.previous_evolution:
             pokemon_params['previous_evolution'] = {
                 "title_ru": pokemon.previous_evolution.title,
                 "pokemon_id": pokemon.previous_evolution.id,
-                "img_url":  request.build_absolute_uri(f'{MEDIA_URL}{pokemon.image}'),
+                "img_url":  pokemon.previous_evolution.image.url,
             }
 
         requested_pokemon.append(pokemon_params)
