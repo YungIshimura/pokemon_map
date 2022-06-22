@@ -41,9 +41,6 @@ def show_all_pokemons(request):
                     f'media/{pokemon_entity.pokemon.image}')
             )
 
-        if pokemon_entity.disappeared_at < django.utils.timezone.localtime():
-            pokemon_entity.delete()
-
     pokemons_on_page = []
     for pokemon in pokemons:
         pokemons_on_page.append({
