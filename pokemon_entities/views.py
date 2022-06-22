@@ -38,7 +38,7 @@ def show_all_pokemons(request):
                 folium_map, pokemon_entity.latitude,
                 pokemon_entity.longitude,
                 request.build_absolute_uri(
-                    f'media/{pokemon_entity.pokemon_location.image}')
+                    f'media/{pokemon_entity.pokemon.image}')
             )
 
         if pokemon_entity.disappeared_at < django.utils.timezone.localtime():
@@ -60,7 +60,7 @@ def show_all_pokemons(request):
 
 def show_pokemon(request, pokemon_id):
     pokemon_entities = PokemonEntity.objects.filter(
-        pokemon_location_id=pokemon_id)
+        pokemon_id=pokemon_id)
     pokemon = Pokemon.objects.filter(id=pokemon_id).first()
     next_pokemon = pokemon.next_evolutions.all().first()
 
@@ -72,18 +72,18 @@ def show_pokemon(request, pokemon_id):
     for pokemon_entity in pokemon_entities:
         pokemon_params = {
             'img_url': request.build_absolute_uri(
-                f'/media/{pokemon_entity.pokemon_location.image}'),
-            "pokemon_id": pokemon_entity.pokemon_location_id,
-            "title_ru": pokemon_entity.pokemon_location.title,
-            "title_jp": pokemon_entity.pokemon_location.title_jp,
-            "title_en": pokemon_entity.pokemon_location.title_en,
+                f'/media/{pokemon_entity.pokemon.image}'),
+            "pokemon_id": pokemon_entity.pokemon_id,
+            "title_ru": pokemon_entity.pokemon.title,
+            "title_jp": pokemon_entity.pokemon.title_jp,
+            "title_en": pokemon_entity.pokemon.title_en,
             'entities': {'lat': pokemon_entity.latitude,
                          'lon': pokemon_entity.longitude},
-            'description': pokemon_entity.pokemon_location.description,
+            'description': pokemon_entity.pokemon.description,
         }
 
         if next_pokemon:
-            pokemon_params['next_evolutions'] = {
+            pokemon_params['next_evolution'] = {
                 "title_ru": next_pokemon.title,
                 "pokemon_id": next_pokemon.id,
                 "img_url": request.build_absolute_uri(
