@@ -39,5 +39,5 @@ class PokemonEntity(models.Model):
                                    null=True, blank=True)
     defence = models.IntegerField(verbose_name="Защита покемона",
                                   null=True, blank=True)
-    stamina = models.IntegerField(verbose_name="Уровень покемона",
+    stamina = models.IntegerField(verbose_name="Мощь покемона",
                                   null=True, blank=True)
