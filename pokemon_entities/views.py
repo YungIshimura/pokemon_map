@@ -53,12 +53,11 @@ def show_all_pokemons(request):
 
 
 def show_pokemon(request, pokemon_id):
-    pokemon_entities = PokemonEntity.objects.filter(
-        pokemon_id=pokemon_id)
     pokemon = Pokemon.objects.filter(id=pokemon_id).first()
+    pokemon_entities = pokemon.entities.filter(pokemon_id=pokemon_id)
     next_pokemon = pokemon.next_evolutions.all().first()
 
-    if not pokemon_entities:
+    if not pokemon:
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
 
     requested_pokemon = []
