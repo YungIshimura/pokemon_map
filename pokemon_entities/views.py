@@ -33,7 +33,7 @@ def show_all_pokemons(request):
     pokemon_entities = PokemonEntity.objects.all()
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in pokemon_entities:
-        if pokemon_entity.appeared_at < django.utils.timezone.localtime() < pokemon_entity.disappeared_at:
+        if pokemon_entity.appeared_at < pokemon_entity.disappeared_at:
             add_pokemon(
                 folium_map, pokemon_entity.latitude,
                 pokemon_entity.longitude,
