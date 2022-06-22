@@ -1,5 +1,7 @@
 import folium
 
+
+from django.utils import timezone
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from .models import Pokemon, PokemonEntity
@@ -20,23 +22,21 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
     )
     folium.Marker(
         [lat, lon],
-        # Warning! `tooltip` attribute is disabled intentionally
-        # to fix strange folium cyrillic encoding bug
         icon=icon,
     ).add_to(folium_map)
 
 
 def show_all_pokemons(request):
     pokemons = Pokemon.objects.all()
-    pokemon_entities = PokemonEntity.objects.all()
+    pokemon_entities = PokemonEntity.objects.filter(
+        appeared_at__lt=timezone.now(), disappeared_at__gt=timezone.now())
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in pokemon_entities:
-        if pokemon_entity.appeared_at < pokemon_entity.disappeared_at:
-            add_pokemon(
-                folium_map, pokemon_entity.latitude,
-                pokemon_entity.longitude,
-                request.build_absolute_uri(pokemon_entity.pokemon.image.url)
-            )
+        add_pokemon(
+            folium_map, pokemon_entity.latitude,
+            pokemon_entity.longitude,
+            request.build_absolute_uri(pokemon_entity.pokemon.image.url)
+        )
 
     pokemons_on_page = []
     for pokemon in pokemons:
@@ -65,7 +65,8 @@ def show_pokemon(request, pokemon_id):
 
     for pokemon_entity in pokemon_entities:
         pokemon_params = {
-            'img_url': request.build_absolute_uri(pokemon_entity.pokemon.image.url),
+            'img_url': request.build_absolute_uri(
+                pokemon_entity.pokemon.image.url),
             "pokemon_id": pokemon_entity.pokemon_id,
             "title_ru": pokemon_entity.pokemon.title,
             "title_jp": pokemon_entity.pokemon.title_jp,
