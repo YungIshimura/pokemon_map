@@ -17,6 +17,9 @@ class Pokemon(models.Model):
                                            null=True,
                                            blank=True,
                                            related_name="next_evolutions")
+    element_type = models.ManyToManyField('PokemonElementType',
+                                          null=True,
+                                          blank=True)
 
     def __str__(self):
         return self.title
@@ -42,3 +45,12 @@ class PokemonEntity(models.Model):
                                   null=True, blank=True)
     stamina = models.IntegerField(verbose_name="Выносливость покемона",
                                   null=True, blank=True)
+
+
+class PokemonElementType(models.Model):
+    title = models.CharField(
+        verbose_name='Элемент покемона', max_length=50
+    )
+    
+    def __str__(self):
+        return self.title
