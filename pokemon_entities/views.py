@@ -15,7 +15,7 @@ DEFAULT_IMAGE_URL = (
 )
 
 
-def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
+def add_pokemon(folium_map, lat, lon, level, health, strength, defence, stamina, image_url=DEFAULT_IMAGE_URL):
     icon = folium.features.CustomIcon(
         image_url,
         icon_size=(50, 50),
@@ -23,6 +23,12 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
     folium.Marker(
         [lat, lon],
         icon=icon,
+        popup=f'''Уровень:{level}
+                  Здоровье:{health}
+                  Сила:{strength}
+                  Защита:{defence}
+                  Выносливость{stamina}
+                  '''
     ).add_to(folium_map)
 
 
@@ -35,9 +41,13 @@ def show_all_pokemons(request):
         add_pokemon(
             folium_map, pokemon_entity.latitude,
             pokemon_entity.longitude,
+            pokemon_entity.level,
+            pokemon_entity.health,
+            pokemon_entity.strength,
+            pokemon_entity.defence,
+            pokemon_entity.stamina,
             request.build_absolute_uri(pokemon_entity.pokemon.image.url)
         )
-
     pokemons_on_page = []
     for pokemon in pokemons:
         pokemons_on_page.append({
