@@ -51,6 +51,10 @@ class PokemonElementType(models.Model):
     title = models.CharField(
         verbose_name='Элемент покемона', max_length=50
     )
-    
+    image = models.ImageField(
+        verbose_name='Изображение элемента', blank=True,
+        null=True
+    )
+
     def __str__(self):
         return self.title
