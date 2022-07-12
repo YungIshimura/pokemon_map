@@ -84,6 +84,11 @@ def show_pokemon(request, pokemon_id):
             'entities': {'lat': pokemon_entity.latitude,
                          'lon': pokemon_entity.longitude},
             'description': pokemon_entity.pokemon.description,
+            'Уровень': pokemon_entity.level,
+            'Здоровье': pokemon_entity.health,
+            'Сила': pokemon_entity.strength,
+            'Защита': pokemon_entity.defence,
+            'Выносливость': pokemon_entity.stamina
         }
 
         if next_pokemon:
@@ -108,6 +113,11 @@ def show_pokemon(request, pokemon_id):
         add_pokemon(
             folium_map, pokemon_entity['entities']['lat'],
             pokemon_entity['entities']['lon'],
+            pokemon_entity['Уровень'],
+            pokemon_entity['Здоровье'],
+            pokemon_entity['Сила'],
+            pokemon_entity['Защита'],
+            pokemon_entity['Выносливость'],
             pokemon_params['img_url'],
         )
 
