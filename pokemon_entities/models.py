@@ -49,11 +49,11 @@ class PokemonEntity(models.Model):
 
 class PokemonElementType(models.Model):
     title = models.CharField(
-        verbose_name='Элемент покемона', max_length=50
+        verbose_name='Элемент покемона', max_length=50, unique=True
     )
     image = models.ImageField(
         verbose_name='Изображение элемента', blank=True,
-        null=True
+        
     )
 
     def __str__(self):

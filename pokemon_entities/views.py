@@ -88,9 +88,19 @@ def show_pokemon(request, pokemon_id):
             'Здоровье': pokemon_entity.health,
             'Сила': pokemon_entity.strength,
             'Защита': pokemon_entity.defence,
-            'Выносливость': pokemon_entity.stamina
+            'Выносливость': pokemon_entity.stamina,
         }
-
+        
+        element_type = []
+        
+        for element in pokemon_entity.pokemon.element_type.all():
+            element_type.append({
+                'title': element.title,
+                'img': request.build_absolute_uri(element.image.url)
+            })
+        
+        pokemon_params['element_type'] = element_type
+            
         if next_pokemon:
             pokemon_params['next_evolution'] = {
                 "title_ru": next_pokemon.title,
