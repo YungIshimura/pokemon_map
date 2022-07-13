@@ -96,7 +96,8 @@ def show_pokemon(request, pokemon_id):
         for element in pokemon_entity.pokemon.element_type.all():
             element_type.append({
                 'title': element.title,
-                'img': request.build_absolute_uri(element.image.url)
+                'img': request.build_absolute_uri(element.image.url),
+                'strong_against': [element.title for element in element.strong_against.all()]
             })
         
         pokemon_params['element_type'] = element_type

@@ -52,9 +52,11 @@ class PokemonElementType(models.Model):
         verbose_name='Элемент покемона', max_length=50, unique=True
     )
     image = models.ImageField(
-        verbose_name='Изображение элемента', blank=True,
-        
+        verbose_name='Изображение элемента', blank=True
     )
+    strong_against = models.ManyToManyField('self',
+                                            symmetrical=False,
+                                            blank=True)
 
     def __str__(self):
         return self.title
